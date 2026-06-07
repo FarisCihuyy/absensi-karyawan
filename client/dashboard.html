@@ -1,893 +1,769 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Absence Management</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .sidebar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .sidebar h4 {
-      margin-bottom: 30px;
-      font-weight: 600;
-    }
-
-    .nav-item {
-      margin-bottom: 10px;
-    }
-
-    .nav-link {
-      color: rgba(255, 255, 255, 0.8);
-      padding: 10px 15px;
-      border-radius: 6px;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-link:hover {
-      color: white;
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-link.active {
-      color: white;
-      background-color: rgba(255, 255, 255, 0.2);
-      font-weight: 600;
-    }
-
-    .topbar {
-      background: white;
-      padding: 20px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .topbar h3 {
-      margin: 0;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-
-    .btn-logout {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 14px;
-    }
-
-    .btn-logout:hover {
-      background-color: #c82333;
-    }
-
-    .main-content {
-      padding: 30px;
-    }
-
-    .filters {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-group {
-      display: flex;
-      gap: 15px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .filter-item {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .filter-item label {
-      display: block;
-      margin-bottom: 5px;
-      color: #333;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .filter-item input,
-    .filter-item select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .filter-item input:focus,
-    .filter-item select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .btn-search {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .btn-search:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .btn-reset {
-      background-color: #6c757d;
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .btn-reset:hover {
-      background-color: #5a6268;
-    }
-
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .toolbar h5 {
-      margin: 0;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .btn-add {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s;
-    }
-
-    .btn-add:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .table-container {
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .table {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .table thead {
-      background-color: #f8f9fa;
-      border-bottom: 2px solid #dee2e6;
-    }
-
-    .table th {
-      color: #333;
-      font-weight: 600;
-      padding: 15px;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.5px;
-    }
-
-    .table td {
-      padding: 15px;
-      vertical-align: middle;
-      border-bottom: 1px solid #dee2e6;
-    }
-
-    .table tbody tr:hover {
-      background-color: #f8f9fa;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-sm {
-      padding: 6px 12px;
-      font-size: 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-edit {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .btn-edit:hover {
-      background-color: #0056b3;
-    }
-
-    .btn-delete {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .btn-delete:hover {
-      background-color: #c82333;
-    }
-
-    .badge {
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .badge-male {
-      background-color: #d1ecf1;
-      color: #0c5460;
-    }
-
-    .badge-female {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-
-    .pagination-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 15px;
-      background-color: #f8f9fa;
-      border-top: 1px solid #dee2e6;
-    }
-
-    .pagination {
-      margin: 0;
-    }
-
-    .pagination a,
-    .pagination span {
-      padding: 6px 10px;
-      margin: 0 2px;
-      border: 1px solid #dee2e6;
-      border-radius: 4px;
-      cursor: pointer;
-      color: #667eea;
-      transition: all 0.3s;
-    }
-
-    .pagination a:hover {
-      background-color: #667eea;
-      color: white;
-    }
-
-    .pagination .active {
-      background-color: #667eea;
-      color: white;
-      border-color: #667eea;
-    }
-
-    .pagination .disabled {
-      color: #ccc;
-      cursor: not-allowed;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #666;
-    }
-
-    .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: #666;
-    }
-
-    .empty-state i {
-      font-size: 48px;
-      margin-bottom: 15px;
-      opacity: 0.5;
-    }
-
-    .empty-state h5 {
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h5 {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .modal-header .btn-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      padding: 20px;
-    }
-
-    .modal-footer {
-      padding: 15px 20px;
-      border-top: 1px solid #eee;
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: #333;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .alert {
-      padding: 15px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      display: none;
-    }
-
-    .alert-success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .alert-error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .alert.show {
-      display: block;
-    }
-  </style>
-</head>
-<body>
-  <div class="d-flex">
-    <!-- Sidebar -->
-    <div class="sidebar" style="width: 250px;">
-      <h4>
-        <i class="bi bi-person-check"></i> Absence Mgmt
-      </h4>
-      <nav>
-        <div class="nav-item">
-          <a href="dashboard.html" class="nav-link active">
-            <i class="bi bi-house-door"></i> Dashboard
+  <head>
+    <base href="./" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <meta name="description" content="Dashboard Manajemen Absensi Karyawan" />
+    <meta name="author" content="Admin" />
+    <meta
+      name="keyword"
+      content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard,CoreUI"
+    />
+    <title>Dashboard - Manajemen Absensi</title>
+    <!-- Icons-->
+    <link
+      href="https://unpkg.com/@coreui/icons@0.3.0/css/coreui-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"
+      rel="stylesheet"
+    />
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      .animated {
+        animation-duration: 0.3s;
+        animation-fill-mode: both;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+      }
+
+      .empty-state i {
+        font-size: 64px;
+        color: #ddd;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .empty-state h5 {
+        margin: 20px 0 10px;
+        color: #333;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        padding: 0;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h5 {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .btn-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #999;
+      }
+
+      .btn-close:hover {
+        color: #333;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .modal-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      }
+
+      .alert {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body class="app aside-menu-fixed sidebar-lg-show">
+    <header class="app-header bg-light border-0 navbar">
+      <button
+        class="navbar-toggler sidebar-toggler d-lg-none mr-auto ml-3"
+        type="button"
+        data-toggle="sidebar-show"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#"><b>Admin</b><span>Absensi</span></a>
+      <button
+        class="navbar-toggler sidebar-toggler d-md-down-none"
+        type="button"
+        data-toggle="sidebar-lg-show"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item px-3">
+          <a class="nav-link" href="/">Dashboard</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link"
+            data-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <div
+              class="user-avatar"
+              id="userInitial"
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: #007bff;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 14px;
+              "
+            >
+              A
+            </div>
           </a>
-        </div>
-      </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div style="flex: 1;">
-      <!-- Topbar -->
-      <div class="topbar">
-        <h3>Absence Management Dashboard</h3>
-        <div class="user-info">
-          <div class="user-avatar" id="userInitial">A</div>
-          <div>
-            <p style="margin: 0; color: #333; font-weight: 500;">
-              <span id="userName">Admin</span>
-            </p>
-            <p style="margin: 0; color: #666; font-size: 12px;">Admin User</p>
+          <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-header"><strong>Akun</strong></div>
+            <a class="dropdown-item" href="#"
+              ><i class="fa fa-user"></i> Profil</a
+            >
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" onclick="logout()"
+              ><i class="fa fa-lock"></i> Logout</a
+            >
           </div>
-          <button class="btn-logout" onclick="logout()">Logout</button>
-        </div>
+        </li>
+      </ul>
+      <button
+        class="navbar-toggler aside-menu-toggler d-md-down-none"
+        type="button"
+        data-toggle="aside-menu-lg-show"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <button
+        class="navbar-toggler aside-menu-toggler d-lg-none mr-3"
+        type="button"
+        data-toggle="aside-menu-show"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </header>
+    <div class="app-body">
+      <div class="sidebar sidebar-pills bg-transparent">
+        <nav class="sidebar-nav">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/"
+                ><i class="nav-icon la la-lg la-dashboard"></i> Dashboard</a
+              >
+            </li>
+          </ul>
+        </nav>
       </div>
 
-      <!-- Main Content Area -->
-      <div class="main-content">
-        <!-- Alert Messages -->
-        <div class="alert alert-success" id="successAlert"></div>
-        <div class="alert alert-error" id="errorAlert"></div>
-
-        <!-- Filters -->
-        <div class="filters">
-          <div class="filter-group">
-            <div class="filter-item">
-              <label for="filterNama">Cari Nama</label>
-              <input type="text" id="filterNama" placeholder="Masukkan nama...">
+      <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">Home</li>
+          <li class="breadcrumb-item"><a href="#">Admin</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+        <div class="container-fluid">
+          <div class="animated fadeIn">
+            <!-- Alert Messages -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="alert alert-success" id="successAlert"></div>
+                <div class="alert alert-error" id="errorAlert"></div>
+              </div>
             </div>
-            <div class="filter-item">
-              <label for="filterGender">Jenis Kelamin</label>
-              <select id="filterGender">
-                <option value="">-- Semua --</option>
+
+            <!-- Filters Section -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="filterNama">Cari Nama</label>
+                          <input
+                            type="text"
+                            id="filterNama"
+                            class="form-control"
+                            placeholder="Masukkan nama..."
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="filterGender">Jenis Kelamin</label>
+                          <select id="filterGender" class="form-control">
+                            <option value="">-- Semua --</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        <div class="form-group">
+                          <button
+                            class="btn btn-primary"
+                            onclick="searchAbsences()"
+                          >
+                            <i class="fa fa-search"></i> Cari
+                          </button>
+                          <button
+                            class="btn btn-secondary"
+                            onclick="resetFilters()"
+                          >
+                            <i class="fa fa-refresh"></i> Reset
+                          </button>
+                          <button
+                            class="btn btn-success float-right"
+                            onclick="openAddModal()"
+                          >
+                            <i class="fa fa-plus"></i> Tambah Data
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <strong>Data Absensi</strong>
+                  </div>
+                  <div class="card-body p-0">
+                    <div id="tableContent">
+                      <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading data...</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal" id="formModal" style="overflow-y: auto">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="modalTitle">Tambah Data Absensi</h5>
+          <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="absenceForm">
+            <div class="form-group">
+              <label for="formNama">Nama *</label>
+              <input type="text" id="formNama" required />
+            </div>
+            <div class="form-group">
+              <label for="formAlamat">Alamat *</label>
+              <input type="text" id="formAlamat" required />
+            </div>
+            <div class="form-group">
+              <label for="formGender">Jenis Kelamin *</label>
+              <select id="formGender" required>
+                <option value="">-- Pilih --</option>
                 <option value="L">Laki-laki</option>
                 <option value="P">Perempuan</option>
               </select>
             </div>
-            <button class="btn-search" onclick="searchAbsences()">
-              <i class="bi bi-search"></i> Search
-            </button>
-            <button class="btn-reset" onclick="resetFilters()">
-              <i class="bi bi-arrow-clockwise"></i> Reset
-            </button>
-          </div>
+            <div class="form-group">
+              <label for="formTanggal">Tanggal Absen *</label>
+              <input type="date" id="formTanggal" required />
+            </div>
+            <div class="form-group">
+              <label for="formJamMasuk">Jam Masuk (HH:mm) *</label>
+              <input type="time" id="formJamMasuk" required />
+            </div>
+            <div class="form-group">
+              <label for="formJamKeluar">Jam Keluar (HH:mm) *</label>
+              <input type="time" id="formJamKeluar" required />
+            </div>
+          </form>
         </div>
-
-        <!-- Toolbar -->
-        <div class="toolbar">
-          <h5>Data Absensi</h5>
-          <button class="btn-add" onclick="openAddModal()">
-            <i class="bi bi-plus-circle"></i> Tambah Data
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">
+            Batal
+          </button>
+          <button type="submit" class="btn btn-primary" onclick="saveAbsence()">
+            Simpan
           </button>
         </div>
-
-        <!-- Table -->
-        <div class="table-container">
-          <div id="tableContent">
-            <div class="loading">
-              <div class="spinner"></div>
-              <p>Loading data...</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Modal Add/Edit -->
-  <div class="modal" id="formModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 id="modalTitle">Tambah Data Absensi</h5>
-        <button class="btn-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="absenceForm">
-          <div class="form-group">
-            <label for="formNama">Nama *</label>
-            <input type="text" id="formNama" required>
-          </div>
-          <div class="form-group">
-            <label for="formAlamat">Alamat *</label>
-            <input type="text" id="formAlamat" required>
-          </div>
-          <div class="form-group">
-            <label for="formGender">Jenis Kelamin *</label>
-            <select id="formGender" required>
-              <option value="">-- Pilih --</option>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="formTanggal">Tanggal Absen *</label>
-            <input type="date" id="formTanggal" required>
-          </div>
-          <div class="form-group">
-            <label for="formJamMasuk">Jam Masuk (HH:mm) *</label>
-            <input type="time" id="formJamMasuk" required>
-          </div>
-          <div class="form-group">
-            <label for="formJamKeluar">Jam Keluar (HH:mm) *</label>
-            <input type="time" id="formJamKeluar" required>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-reset" onclick="closeModal()">Cancel</button>
-        <button class="btn-search" onclick="saveAbsence()">Save</button>
-      </div>
-    </div>
-  </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.0/perfect-scrollbar.min.js"></script>
+    <script src="https://unpkg.com/@coreui/coreui@2.1.16/dist/js/coreui.min.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/iife/PNotify.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/iife/PNotifyButtons.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/iife/PNotifyConfirm.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/iife/PNotifyMobile.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/iife/PNotifyNonBlock.js"></script>
+    <script>
+      PNotify.defaults.styling = "bootstrap4";
+    </script>
+    <!-- Plugins and scripts required by this view-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="https://unpkg.com/@coreui/coreui-plugin-chartjs-custom-tooltips@1.3.1/dist/js/custom-tooltips.min.js"></script>
+    <script src="js/main.js"></script>
 
-  <script src="js/api.js"></script>
-  <script>
-    let currentPage = 1;
-    let currentLimit = 10;
-    let editingId = null;
-    let totalPages = 1;
+    <script src="js/api.js"></script>
+    <script>
+      let currentPage = 1;
+      let currentLimit = 10;
+      let editingId = null;
+      let totalPages = 1;
 
-    // Check authentication
-    window.addEventListener('load', () => {
-      if (!authService.isLoggedIn()) {
-        window.location.href = 'login.html';
-        return;
-      }
+      // Check authentication
+      window.addEventListener("load", () => {
+        if (!authService.isLoggedIn()) {
+          window.location.href = "login.html";
+          return;
+        }
 
-      // Set user info
-      const user = authService.getUser();
-      if (user) {
-        document.getElementById('userName').textContent = user.username;
-        document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
-      }
+        // Set user info
+        const user = authService.getUser();
+        if (user) {
+          document.getElementById("userInitial").textContent = user.username
+            .charAt(0)
+            .toUpperCase();
+        }
 
-      // Load absences
-      loadAbsences();
-    });
+        // Load absences
+        loadAbsences();
+      });
 
-    async function loadAbsences() {
-      try {
-        const tableContent = document.getElementById('tableContent');
-        tableContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading data...</p></div>';
+      async function loadAbsences() {
+        try {
+          const tableContent = document.getElementById("tableContent");
+          tableContent.innerHTML =
+            '<div class="loading"><div class="spinner"></div><p>Loading data...</p></div>';
 
-        const params = {
-          page: currentPage,
-          limit: currentLimit,
-          nama: document.getElementById('filterNama').value,
-          jenis_kelamin: document.getElementById('filterGender').value,
-        };
+          const params = {
+            page: currentPage,
+            limit: currentLimit,
+            nama: document.getElementById("filterNama").value,
+            jenis_kelamin: document.getElementById("filterGender").value,
+          };
 
-        const result = await absenceService.getAll(params);
-        const absences = result.data;
-        const pagination = result.pagination;
+          const result = await absenceService.getAll(params);
+          const absences = result.data;
+          const pagination = result.pagination;
 
-        totalPages = pagination.totalPages;
+          totalPages = pagination.totalPages;
 
-        if (absences.length === 0) {
-          tableContent.innerHTML = `
+          if (absences.length === 0) {
+            tableContent.innerHTML = `
             <div class="empty-state">
-              <i class="bi bi-inbox"></i>
+              <i class="fa fa-inbox"></i>
               <h5>No data found</h5>
               <p>Tidak ada data absensi yang sesuai dengan filter.</p>
             </div>
           `;
-          return;
-        }
+            return;
+          }
 
-        let tableHTML = `
-          <table class="table">
-            <thead>
+          let tableHTML = `
+          <table class="table table-responsive-sm table-striped mb-0">
+            <thead class="thead-light">
               <tr>
-                <th>No</th>
+                <th class="text-center">No</th>
                 <th>Nama</th>
                 <th>Alamat</th>
-                <th>Jenis Kelamin</th>
+                <th class="text-center">Jenis Kelamin</th>
                 <th>Tanggal</th>
                 <th>Jam Masuk</th>
                 <th>Jam Keluar</th>
-                <th>Aksi</th>
+                <th class="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
         `;
 
-        absences.forEach((absence, index) => {
-          const no = (pagination.page - 1) * pagination.limit + index + 1;
-          const gender = absence.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
-          const genderBadge = absence.jenis_kelamin === 'L' ? 'badge-male' : 'badge-female';
+          absences.forEach((absence, index) => {
+            const no = (pagination.page - 1) * pagination.limit + index + 1;
+            const gender =
+              absence.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan";
+            const genderBadge =
+              absence.jenis_kelamin === "L" ? "badge-male" : "badge-female";
 
-          tableHTML += `
+            tableHTML += `
             <tr>
-              <td>${no}</td>
+              <td class="text-center">${no}</td>
               <td>${absence.nama}</td>
               <td>${absence.alamat}</td>
-              <td><span class="badge ${genderBadge}">${gender}</span></td>
+              <td class="text-center"><span class="badge ${genderBadge}">${gender}</span></td>
               <td>${apiUtils.formatDate(absence.tanggal_absen)}</td>
               <td>${apiUtils.formatTime(absence.jam_masuk)}</td>
               <td>${apiUtils.formatTime(absence.jam_keluar)}</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn-sm btn-edit" onclick="openEditModal(${absence.id})">
-                    <i class="bi bi-pencil"></i> Edit
-                  </button>
-                  <button class="btn-sm btn-delete" onclick="deleteAbsence(${absence.id})">
-                    <i class="bi bi-trash"></i> Delete
-                  </button>
-                </div>
+              <td class="text-center">
+                <button class="btn btn-sm btn-info" onclick="openEditModal(${absence.id})" title="Edit">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteAbsence(${absence.id})" title="Hapus">
+                  <i class="fa fa-trash"></i>
+                </button>
               </td>
             </tr>
           `;
-        });
+          });
 
-        tableHTML += '</tbody></table>';
+          tableHTML += "</tbody></table>";
 
-        // Add pagination
-        tableHTML += `
-          <div class="pagination-container">
-            <div>
+          // Add pagination
+          tableHTML += `
+          <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; background-color: #f8f9fa;">
+            <div style="font-size: 14px; color: #666;">
               Showing ${(pagination.page - 1) * pagination.limit + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} entries
             </div>
-            <div class="pagination">
+            <nav>
+              <ul class="pagination" style="margin: 0;">
         `;
 
-        if (pagination.page > 1) {
-          tableHTML += `<a onclick="goToPage(1)">First</a>`;
-          tableHTML += `<a onclick="goToPage(${pagination.page - 1})">Previous</a>`;
-        } else {
-          tableHTML += `<span class="disabled">First</span>`;
-          tableHTML += `<span class="disabled">Previous</span>`;
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-          if (i === pagination.page) {
-            tableHTML += `<span class="active">${i}</span>`;
-          } else if (i <= pagination.page + 2 && i >= pagination.page - 2) {
-            tableHTML += `<a onclick="goToPage(${i})">${i}</a>`;
+          if (pagination.page > 1) {
+            tableHTML += `<li class="page-item"><a class="page-link" onclick="goToPage(1)" href="javascript:void(0)">First</a></li>`;
+            tableHTML += `<li class="page-item"><a class="page-link" onclick="goToPage(${pagination.page - 1})" href="javascript:void(0)">Previous</a></li>`;
+          } else {
+            tableHTML += `<li class="page-item disabled"><span class="page-link">First</span></li>`;
+            tableHTML += `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
           }
-        }
 
-        if (pagination.page < totalPages) {
-          tableHTML += `<a onclick="goToPage(${pagination.page + 1})">Next</a>`;
-          tableHTML += `<a onclick="goToPage(${totalPages})">Last</a>`;
-        } else {
-          tableHTML += `<span class="disabled">Next</span>`;
-          tableHTML += `<span class="disabled">Last</span>`;
-        }
+          for (let i = 1; i <= totalPages; i++) {
+            if (i === pagination.page) {
+              tableHTML += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+            } else if (i <= pagination.page + 2 && i >= pagination.page - 2) {
+              tableHTML += `<li class="page-item"><a class="page-link" onclick="goToPage(${i})" href="javascript:void(0)">${i}</a></li>`;
+            }
+          }
 
-        tableHTML += `</div></div>`;
+          if (pagination.page < totalPages) {
+            tableHTML += `<li class="page-item"><a class="page-link" onclick="goToPage(${pagination.page + 1})" href="javascript:void(0)">Next</a></li>`;
+            tableHTML += `<li class="page-item"><a class="page-link" onclick="goToPage(${totalPages})" href="javascript:void(0)">Last</a></li>`;
+          } else {
+            tableHTML += `<li class="page-item disabled"><span class="page-link">Next</span></li>`;
+            tableHTML += `<li class="page-item disabled"><span class="page-link">Last</span></li>`;
+          }
 
-        tableContent.innerHTML = tableHTML;
-      } catch (error) {
-        showError(error.message);
-        document.getElementById('tableContent').innerHTML = `
+          tableHTML += `</ul></nav></div>`;
+
+          tableContent.innerHTML = tableHTML;
+        } catch (error) {
+          showError(error.message);
+          document.getElementById("tableContent").innerHTML = `
           <div class="empty-state">
-            <i class="bi bi-exclamation-triangle"></i>
+            <i class="fa fa-exclamation-triangle"></i>
             <h5>Error</h5>
             <p>${error.message}</p>
           </div>
         `;
-      }
-    }
-
-    function goToPage(page) {
-      currentPage = page;
-      loadAbsences();
-    }
-
-    function searchAbsences() {
-      currentPage = 1;
-      loadAbsences();
-    }
-
-    function resetFilters() {
-      document.getElementById('filterNama').value = '';
-      document.getElementById('filterGender').value = '';
-      currentPage = 1;
-      loadAbsences();
-    }
-
-    function openAddModal() {
-      editingId = null;
-      document.getElementById('modalTitle').textContent = 'Tambah Data Absensi';
-      document.getElementById('absenceForm').reset();
-      document.getElementById('formModal').classList.add('show');
-    }
-
-    async function openEditModal(id) {
-      try {
-        editingId = id;
-        const absence = await absenceService.getById(id);
-
-        document.getElementById('modalTitle').textContent = 'Edit Data Absensi';
-        document.getElementById('formNama').value = absence.nama;
-        document.getElementById('formAlamat').value = absence.alamat;
-        document.getElementById('formGender').value = absence.jenis_kelamin;
-        document.getElementById('formTanggal').value = absence.tanggal_absen;
-        document.getElementById('formJamMasuk').value = apiUtils.formatTime(absence.jam_masuk);
-        document.getElementById('formJamKeluar').value = apiUtils.formatTime(absence.jam_keluar);
-
-        document.getElementById('formModal').classList.add('show');
-      } catch (error) {
-        showError(error.message);
-      }
-    }
-
-    function closeModal() {
-      document.getElementById('formModal').classList.remove('show');
-      editingId = null;
-    }
-
-    async function saveAbsence() {
-      try {
-        const data = {
-          nama: document.getElementById('formNama').value,
-          alamat: document.getElementById('formAlamat').value,
-          jenis_kelamin: document.getElementById('formGender').value,
-          tanggal_absen: document.getElementById('formTanggal').value,
-          jam_masuk: document.getElementById('formJamMasuk').value,
-          jam_keluar: document.getElementById('formJamKeluar').value,
-        };
-
-        if (editingId) {
-          await absenceService.update(editingId, data);
-          showSuccess('Data berhasil diupdate!');
-        } else {
-          await absenceService.create(data);
-          showSuccess('Data berhasil ditambahkan!');
         }
+      }
 
-        closeModal();
+      function goToPage(page) {
+        currentPage = page;
+        loadAbsences();
+      }
+
+      function searchAbsences() {
         currentPage = 1;
         loadAbsences();
-      } catch (error) {
-        showError(error.message);
-      }
-    }
-
-    async function deleteAbsence(id) {
-      if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-        return;
       }
 
-      try {
-        await absenceService.delete(id);
-        showSuccess('Data berhasil dihapus!');
+      function resetFilters() {
+        document.getElementById("filterNama").value = "";
+        document.getElementById("filterGender").value = "";
+        currentPage = 1;
         loadAbsences();
-      } catch (error) {
-        showError(error.message);
       }
-    }
 
-    function showSuccess(message) {
-      const alert = document.getElementById('successAlert');
-      alert.textContent = message;
-      alert.classList.add('show');
-
-      setTimeout(() => {
-        alert.classList.remove('show');
-      }, 3000);
-    }
-
-    function showError(message) {
-      const alert = document.getElementById('errorAlert');
-      alert.textContent = message;
-      alert.classList.add('show');
-
-      setTimeout(() => {
-        alert.classList.remove('show');
-      }, 3000);
-    }
-
-    function logout() {
-      if (confirm('Apakah Anda yakin ingin logout?')) {
-        authService.logout();
-        window.location.href = 'login.html';
+      function openAddModal() {
+        editingId = null;
+        document.getElementById("modalTitle").textContent =
+          "Tambah Data Absensi";
+        document.getElementById("absenceForm").reset();
+        document.getElementById("formModal").classList.add("show");
       }
-    }
 
-    // Close modal when clicking outside
-    document.getElementById('formModal').addEventListener('click', (e) => {
-      if (e.target.id === 'formModal') {
-        closeModal();
+      async function openEditModal(id) {
+        try {
+          editingId = id;
+          const absence = await absenceService.getById(id);
+
+          document.getElementById("modalTitle").textContent =
+            "Edit Data Absensi";
+          document.getElementById("formNama").value = absence.nama;
+          document.getElementById("formAlamat").value = absence.alamat;
+          document.getElementById("formGender").value = absence.jenis_kelamin;
+          document.getElementById("formTanggal").value = absence.tanggal_absen;
+          document.getElementById("formJamMasuk").value = apiUtils.formatTime(
+            absence.jam_masuk,
+          );
+          document.getElementById("formJamKeluar").value = apiUtils.formatTime(
+            absence.jam_keluar,
+          );
+
+          document.getElementById("formModal").classList.add("show");
+        } catch (error) {
+          showError(error.message);
+        }
       }
-    });
-  </script>
-</body>
+
+      function closeModal() {
+        document.getElementById("formModal").classList.remove("show");
+        editingId = null;
+      }
+
+      async function saveAbsence() {
+        try {
+          const data = {
+            nama: document.getElementById("formNama").value,
+            alamat: document.getElementById("formAlamat").value,
+            jenis_kelamin: document.getElementById("formGender").value,
+            tanggal_absen: document.getElementById("formTanggal").value,
+            jam_masuk: document.getElementById("formJamMasuk").value,
+            jam_keluar: document.getElementById("formJamKeluar").value,
+          };
+
+          const filteredData = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) => value.trim() !== ""),
+          );
+
+          if (editingId) {
+            await absenceService.update(editingId, filteredData);
+            showSuccess("Data berhasil diupdate!");
+          } else {
+            await absenceService.create(filteredData);
+            showSuccess("Data berhasil ditambahkan!");
+          }
+
+          closeModal();
+          currentPage = 1;
+          loadAbsences();
+        } catch (error) {
+          showError(error.message);
+        }
+      }
+
+      async function deleteAbsence(id) {
+        if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+          return;
+        }
+
+        try {
+          await absenceService.delete(id);
+          showSuccess("Data berhasil dihapus!");
+          loadAbsences();
+        } catch (error) {
+          showError(error.message);
+        }
+      }
+
+      function showSuccess(message) {
+        const alert = document.getElementById("successAlert");
+        alert.textContent = message;
+        alert.classList.add("show");
+
+        setTimeout(() => {
+          alert.classList.remove("show");
+        }, 3000);
+      }
+
+      function showError(message) {
+        const alert = document.getElementById("errorAlert");
+        alert.textContent = message;
+        alert.classList.add("show");
+
+        setTimeout(() => {
+          alert.classList.remove("show");
+        }, 3000);
+      }
+
+      function logout() {
+        if (confirm("Apakah Anda yakin ingin logout?")) {
+          authService.logout();
+          window.location.href = "login.html";
+        }
+      }
+
+      // Close modal when clicking outside
+      document.getElementById("formModal").addEventListener("click", (e) => {
+        if (e.target.id === "formModal") {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
 </html>
