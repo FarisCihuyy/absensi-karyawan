@@ -1,0 +1,13 @@
+{
+  "name": "absence-management-frontend",
+  "version": "1.0.0",
+  "description": "Frontend untuk absence management system dengan BackStrap template",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 3000",
+    "dev": "python3 -m http.server 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

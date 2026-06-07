@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Absence Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .sidebar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .sidebar h4 {
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      margin-bottom: 10px;
+    }
+
+    .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      padding: 10px 15px;
+      border-radius: 6px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-link:hover {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link.active {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+
+    .topbar {
+      background: white;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar h3 {
+      margin: 0;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .btn-logout:hover {
+      background-color: #c82333;
+    }
+
+    .main-content {
+      padding: 30px;
+    }
+
+    .filters {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-item label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .filter-item input,
+    .filter-item select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .filter-item input:focus,
+    .filter-item select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-search {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-search:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-reset {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-reset:hover {
+      background-color: #5a6268;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .toolbar h5 {
+      margin: 0;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .table thead {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .table th {
+      color: #333;
+      font-weight: 600;
+      padding: 15px;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .table td {
+      padding: 15px;
+      vertical-align: middle;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #c82333;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-male {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .badge-female {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .pagination {
+      margin: 0;
+    }
+
+    .pagination a,
+    .pagination span {
+      padding: 6px 10px;
+      margin: 0 2px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #667eea;
+      transition: all 0.3s;
+    }
+
+    .pagination a:hover {
+      background-color: #667eea;
+      color: white;
+    }
+
+    .pagination .active {
+      background-color: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .pagination .disabled {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .empty-state h5 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h5 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .modal-header .btn-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .alert.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar" style="width: 250px;">
+      <h4>
+        <i class="bi bi-person-check"></i> Absence Mgmt
+      </h4>
+      <nav>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link active">
+            <i class="bi bi-house-door"></i> Dashboard
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div style="flex: 1;">
+      <!-- Topbar -->
+      <div class="topbar">
+        <h3>Absence Management Dashboard</h3>
+        <div class="user-info">
+          <div class="user-avatar" id="userInitial">A</div>
+          <div>
+            <p style="margin: 0; color: #333; font-weight: 500;">
+              <span id="userName">Admin</span>
+            </p>
+            <p style="margin: 0; color: #666; font-size: 12px;">Admin User</p>
+          </div>
+          <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <!-- Alert Messages -->
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <div class="filter-group">
+            <div class="filter-item">
+              <label for="filterNama">Cari Nama</label>
+              <input type="text" id="filterNama" placeholder="Masukkan nama...">
+            </div>
+            <div class="filter-item">
+              <label for="filterGender">Jenis Kelamin</label>
+              <select id="filterGender">
+                <option value="">-- Semua --</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <button class="btn-search" onclick="searchAbsences()">
+              <i class="bi bi-search"></i> Search
+            </button>
+            <button class="btn-reset" onclick="resetFilters()">
+              <i class="bi bi-arrow-clockwise"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <h5>Data Absensi</h5>
+          <button class="btn-add" onclick="openAddModal()">
+            <i class="bi bi-plus-circle"></i> Tambah Data
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+          <div id="tableContent">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal" id="formModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modalTitle">Tambah Data Absensi</h5>
+        <button class="btn-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="absenceForm">
+          <div class="form-group">
+            <label for="formNama">Nama *</label>
+            <input type="text" id="formNama" required>
+          </div>
+          <div class="form-group">
+            <label for="formAlamat">Alamat *</label>
+            <input type="text" id="formAlamat" required>
+          </div>
+          <div class="form-group">
+            <label for="formGender">Jenis Kelamin *</label>
+            <select id="formGender" required>
+              <option value="">-- Pilih --</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="formTanggal">Tanggal Absen *</label>
+            <input type="date" id="formTanggal" required>
+          </div>
+          <div class="form-group">
+            <label for="formJamMasuk">Jam Masuk (HH:mm) *</label>
+            <input type="time" id="formJamMasuk" required>
+          </div>
+          <div class="form-group">
+            <label for="formJamKeluar">Jam Keluar (HH:mm) *</label>
+            <input type="time" id="formJamKeluar" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-reset" onclick="closeModal()">Cancel</button>
+        <button class="btn-search" onclick="saveAbsence()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let currentPage = 1;
+    let currentLimit = 10;
+    let editingId = null;
+    let totalPages = 1;
+
+    // Check authentication
+    window.addEventListener('load', () => {
+      if (!authService.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Set user info
+      const user = authService.getUser();
+      if (user) {
+        document.getElementById('userName').textContent = user.username;
+        document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
+      }
+
+      // Load absences
+      loadAbsences();
+    });
+
+    async function loadAbsences() {
+      try {
+        const tableContent = document.getElementById('tableContent');
+        tableContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading data...</p></div>';
+
+        const params = {
+          page: currentPage,
+          limit: currentLimit,
+          nama: document.getElementById('filterNama').value,
+          jenis_kelamin: document.getElementById('filterGender').value,
+        };
+
+        const result = await absenceService.getAll(params);
+        const absences = result.data;
+        const pagination = result.pagination;
+
+        totalPages = pagination.totalPages;
+
+        if (absences.length === 0) {
+          tableContent.innerHTML = `
+            <div class="empty-state">
+              <i class="bi bi-inbox"></i>
+              <h5>No data found</h5>
+              <p>Tidak ada data absensi yang sesuai dengan filter.</p>
+            </div>
+          `;
+          return;
+        }
+
+        let tableHTML = `
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Jenis Kelamin</th>
+                <th>Tanggal</th>
+                <th>Jam Masuk</th>
+                <th>Jam Keluar</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        absences.forEach((absence, index) => {
+          const no = (pagination.page - 1) * pagination.limit + index + 1;
+          const gender = absence.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
+          const genderBadge = absence.jenis_kelamin === 'L' ? 'badge-male' : 'badge-female';
+
+          tableHTML += `
+            <tr>
+              <td>${no}</td>
+              <td>${absence.nama}</td>
+              <td>${absence.alamat}</td>
+              <td><span class="badge ${genderBadge}">${gender}</span></td>
+              <td>${apiUtils.formatDate(absence.tanggal_absen)}</td>
+              <td>${apiUtils.formatTime(absence.jam_masuk)}</td>
+              <td>${apiUtils.formatTime(absence.jam_keluar)}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-sm btn-edit" onclick="openEditModal(${absence.id})">
+                    <i class="bi bi-pencil"></i> Edit
+                  </button>
+                  <button class="btn-sm btn-delete" onclick="deleteAbsence(${absence.id})">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+
+        tableHTML += '</tbody></table>';
+
+        // Add pagination
+        tableHTML += `
+          <div class="pagination-container">
+            <div>
+              Showing ${(pagination.page - 1) * pagination.limit + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} entries
+            </div>
+            <div class="pagination">
+        `;
+
+        if (pagination.page > 1) {
+          tableHTML += `<a onclick="goToPage(1)">First</a>`;
+          tableHTML += `<a onclick="goToPage(${pagination.page - 1})">Previous</a>`;
+        } else {
+          tableHTML += `<span class="disabled">First</span>`;
+          tableHTML += `<span class="disabled">Previous</span>`;
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === pagination.page) {
+            tableHTML += `<span class="active">${i}</span>`;
+          } else if (i <= pagination.page + 2 && i >= pagination.page - 2) {
+            tableHTML += `<a onclick="goToPage(${i})">${i}</a>`;
+          }
+        }
+
+        if (pagination.page < totalPages) {
+          tableHTML += `<a onclick="goToPage(${pagination.page + 1})">Next</a>`;
+          tableHTML += `<a onclick="goToPage(${totalPages})">Last</a>`;
+        } else {
+          tableHTML += `<span class="disabled">Next</span>`;
+          tableHTML += `<span class="disabled">Last</span>`;
+        }
+
+        tableHTML += `</div></div>`;
+
+        tableContent.innerHTML = tableHTML;
+      } catch (error) {
+        showError(error.message);
+        document.getElementById('tableContent').innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-exclamation-triangle"></i>
+            <h5>Error</h5>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      loadAbsences();
+    }
+
+    function searchAbsences() {
+      currentPage = 1;
+      loadAbsences();
+    }
+
+    function resetFilters() {
+      document.getElementById('filterNama').value = '';
+      document.getElementById('filterGender').value = '';
+      currentPage = 1;
+      loadAbsences();
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Tambah Data Absensi';
+      document.getElementById('absenceForm').reset();
+      document.getElementById('formModal').classList.add('show');
+    }
+
+    async function openEditModal(id) {
+      try {
+        editingId = id;
+        const absence = await absenceService.getById(id);
+
+        document.getElementById('modalTitle').textContent = 'Edit Data Absensi';
+        document.getElementById('formNama').value = absence.nama;
+        document.getElementById('formAlamat').value = absence.alamat;
+        document.getElementById('formGender').value = absence.jenis_kelamin;
+        document.getElementById('formTanggal').value = absence.tanggal_absen;
+        document.getElementById('formJamMasuk').value = apiUtils.formatTime(absence.jam_masuk);
+        document.getElementById('formJamKeluar').value = apiUtils.formatTime(absence.jam_keluar);
+
+        document.getElementById('formModal').classList.add('show');
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('formModal').classList.remove('show');
+      editingId = null;
+    }
+
+    async function saveAbsence() {
+      try {
+        const data = {
+          nama: document.getElementById('formNama').value,
+          alamat: document.getElementById('formAlamat').value,
+          jenis_kelamin: document.getElementById('formGender').value,
+          tanggal_absen: document.getElementById('formTanggal').value,
+          jam_masuk: document.getElementById('formJamMasuk').value,
+          jam_keluar: document.getElementById('formJamKeluar').value,
+        };
+
+        if (editingId) {
+          await absenceService.update(editingId, data);
+          showSuccess('Data berhasil diupdate!');
+        } else {
+          await absenceService.create(data);
+          showSuccess('Data berhasil ditambahkan!');
+        }
+
+        closeModal();
+        currentPage = 1;
+        loadAbsences();
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    async function deleteAbsence(id) {
+      if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+        return;
+      }
+
+      try {
+        await absenceService.delete(id);
+        showSuccess('Data berhasil dihapus!');
+        loadAbsences();
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function showSuccess(message) {
+      const alert = document.getElementById('successAlert');
+      alert.textContent = message;
+      alert.classList.add('show');
+
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+
+    function showError(message) {
+      const alert = document.getElementById('errorAlert');
+      alert.textContent = message;
+      alert.classList.add('show');
+
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+
+    function logout() {
+      if (confirm('Apakah Anda yakin ingin logout?')) {
+        authService.logout();
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('formModal').addEventListener('click', (e) => {
+      if (e.target.id === 'formModal') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
